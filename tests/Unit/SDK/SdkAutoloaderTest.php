@@ -27,7 +27,6 @@ class SdkAutoloaderTest extends TestCase
     {
         LoggerHolder::set(new NullLogger());
         Globals::reset();
-        SdkAutoloader::reset();
     }
 
     public function tearDown(): void
@@ -37,17 +36,35 @@ class SdkAutoloaderTest extends TestCase
 
     public function test_disabled_by_default(): void
     {
+        $this->assertFalse(SdkAutoloader::isEnabled());
+    }
+
+    public function test_enabled(): void
+    {
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'true');
+        $this->assertTrue(SdkAutoloader::isEnabled());
+    }
+
+    public function test_disabled(): void
+    {
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'false');
+        $this->assertFalse(SdkAutoloader::isEnabled());
+    }
+
+    public function test_disabled_with_invalid_setting(): void
+    {
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'invalid-value');
+        $this->assertFalse(SdkAutoloader::isEnabled());
+    }
+
+    public function test_noop_if_disabled(): void
+    {
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'false');
         $this->assertFalse(SdkAutoloader::autoload());
         $this->assertInstanceOf(NoopMeterProvider::class, Globals::meterProvider());
         $this->assertInstanceOf(NoopTracerProvider::class, Globals::tracerProvider());
         $this->assertInstanceOf(NoopLoggerProvider::class, Globals::loggerProvider());
         $this->assertInstanceOf(NoopTextMapPropagator::class, Globals::propagator(), 'propagator not initialized by disabled autoloader');
-    }
-
-    public function test_disabled_with_invalid_flag(): void
-    {
-        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'invalid-value');
-        $this->assertFalse(SdkAutoloader::autoload());
     }
 
     public function test_sdk_disabled_does_not_disable_propagator(): void
@@ -72,10 +89,9 @@ class SdkAutoloaderTest extends TestCase
 
     public function test_ignore_urls_without_request_uri(): void
     {
-        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'true');
-        $this->setEnvironmentVariable(Variables::OTEL_PHP_EXCLUDED_URLS, '*');
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_EXCLUDED_URLS, '.*');
         unset($_SERVER['REQUEST_URI']);
-        $this->assertFalse(SdkAutoloader::isIgnoredUrl());
+        $this->assertFalse(SdkAutoloader::isExcludedUrl());
     }
 
     /**
@@ -83,10 +99,9 @@ class SdkAutoloaderTest extends TestCase
      */
     public function test_ignore_urls(string $ignore, string $uri, bool $expected): void
     {
-        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'true');
         $this->setEnvironmentVariable(Variables::OTEL_PHP_EXCLUDED_URLS, $ignore);
         $_SERVER['REQUEST_URI'] = $uri;
-        $this->assertSame($expected, SdkAutoloader::isIgnoredUrl());
+        $this->assertSame($expected, SdkAutoloader::isExcludedUrl());
     }
 
     public static function ignoreUrlsProvider(): array
@@ -123,5 +138,13 @@ class SdkAutoloaderTest extends TestCase
                 true,
             ],
         ];
+    }
+
+    public function test_enabled_with_excluded_url(): void
+    {
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_AUTOLOAD_ENABLED, 'true');
+        $this->setEnvironmentVariable(Variables::OTEL_PHP_EXCLUDED_URLS, '.*');
+        $_SERVER['REQUEST_URI'] = '/test';
+        $this->assertFalse(SdkAutoloader::autoload());
     }
 }
