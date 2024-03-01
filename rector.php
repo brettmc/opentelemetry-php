@@ -3,20 +3,26 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
+use Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRector;
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
+use Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector;
 use Rector\Config\RectorConfig;
+use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
+use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
+use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 use Rector\ValueObject\PhpVersion;
 use Rector\Set\ValueObject\SetList;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->phpVersion(PhpVersion::PHP_80);
+    $rectorConfig->phpVersion(PhpVersion::PHP_81);
 
     $rectorConfig->paths([
         __DIR__ . '/src',
     ]);
 
     $rectorConfig->sets([
-        SetList::PHP_80,
+        SetList::PHP_81,
         SetList::CODE_QUALITY,
     ]);
     $rectorConfig->skip([
@@ -25,8 +31,17 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/src/SDK/SdkAutoloader.php',
         ],
         FlipTypeControlToUseExclusiveTypeRector::class,
-        \Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class,
-        \Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector::class,
-        \Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRector::class,
+        DisallowedEmptyRuleFixerRector::class,
+        ExplicitBoolCompareRector::class,
+        LocallyCalledStaticMethodToNonStaticRector::class,
+        ReadOnlyPropertyRector::class => [
+            __DIR__ . '/src/SDK/Metrics/Stream/SynchronousMetricStream.php',
+        ],
+        NullToStrictStringFuncCallArgRector::class => [
+            __DIR__ . '/src/SDK/SdkAutoloader.php',
+        ],
+        NewInInitializerRector::class => [
+            __DIR__ . '/src/SDK/Trace/Sampler/ParentBased.php',
+        ],
     ]);
 };

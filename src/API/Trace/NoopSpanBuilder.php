@@ -13,7 +13,7 @@ final class NoopSpanBuilder implements SpanBuilderInterface
     /** @var ContextInterface|false|null */
     private $parentContext = null;
 
-    public function __construct(private ContextStorageInterface $contextStorage)
+    public function __construct(private readonly ContextStorageInterface $contextStorage)
     {
     }
 

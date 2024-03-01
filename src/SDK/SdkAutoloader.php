@@ -46,9 +46,9 @@ class SdkAutoloader
 
             $loggerProvider = (new LoggerProviderFactory())->create($emitMetrics ? $meterProvider : null, $resource);
 
-            ShutdownHandler::register([$tracerProvider, 'shutdown']);
-            ShutdownHandler::register([$meterProvider, 'shutdown']);
-            ShutdownHandler::register([$loggerProvider, 'shutdown']);
+            ShutdownHandler::register($tracerProvider->shutdown(...));
+            ShutdownHandler::register($meterProvider->shutdown(...));
+            ShutdownHandler::register($loggerProvider->shutdown(...));
 
             return $configurator
                 ->withTracerProvider($tracerProvider)
@@ -59,30 +59,6 @@ class SdkAutoloader
         });
 
         return true;
-    }
-
-    /**
-     * Test whether a request URI is set, and if it matches the excluded urls configuration option
-     *
-     * @internal
-     */
-    public static function isIgnoredUrl(): bool
-    {
-        $ignoreUrls = Configuration::getList(Variables::OTEL_PHP_EXCLUDED_URLS, []);
-        if ($ignoreUrls === []) {
-            return false;
-        }
-        $url = $_SERVER['REQUEST_URI'] ?? null;
-        if (!$url) {
-            return false;
-        }
-        foreach ($ignoreUrls as $ignore) {
-            if (preg_match(sprintf('|%s|', $ignore), $url) === 1) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

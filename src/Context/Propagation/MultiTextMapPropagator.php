@@ -14,21 +14,17 @@ use OpenTelemetry\Context\ContextInterface;
 final class MultiTextMapPropagator implements TextMapPropagatorInterface
 {
     /**
-     * @readonly
-     *
      * @var list<string>
      */
-    private array $fields;
+    private readonly array $fields;
 
     /**
      * @no-named-arguments
      *
      * @param list<TextMapPropagatorInterface> $propagators
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private array $propagators
+    public function __construct(
+        private readonly array $propagators
     ) {
         $this->fields = $this->extractFields($this->propagators);
     }

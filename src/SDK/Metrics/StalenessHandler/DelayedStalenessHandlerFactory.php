@@ -14,10 +14,10 @@ use Traversable;
 
 final class DelayedStalenessHandlerFactory implements StalenessHandlerFactoryInterface
 {
-    private int $nanoDelay;
+    private readonly int $nanoDelay;
 
-    private Closure $stale;
-    private Closure $freshen;
+    private readonly Closure $stale;
+    private readonly Closure $freshen;
 
     /** @var ArrayAccess<DelayedStalenessHandler, int>&Traversable<DelayedStalenessHandler, int> */
     private $staleHandlers;
@@ -26,7 +26,7 @@ final class DelayedStalenessHandlerFactory implements StalenessHandlerFactoryInt
      * @param float $delay delay in seconds
      */
     public function __construct(
-        private ClockInterface $clock,
+        private readonly ClockInterface $clock,
         float $delay
     ) {
         $this->nanoDelay = (int) ($delay * 1e9);
