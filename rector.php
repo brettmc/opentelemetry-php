@@ -9,20 +9,23 @@ use Rector\ValueObject\PhpVersion;
 use Rector\Set\ValueObject\SetList;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->phpVersion(PhpVersion::PHP_80);
+    $rectorConfig->phpVersion(PhpVersion::PHP_81);
 
     $rectorConfig->paths([
         __DIR__ . '/src',
     ]);
 
     $rectorConfig->sets([
-        SetList::PHP_80,
+        SetList::PHP_81,
         SetList::CODE_QUALITY,
     ]);
     $rectorConfig->skip([
         CallableThisArrayToAnonymousFunctionRector::class => [
             __DIR__ . '/src/SDK/SdkBuilder.php',
             __DIR__ . '/src/SDK/SdkAutoloader.php',
+        ],
+        \Rector\Php81\Rector\Property\ReadOnlyPropertyRector::class => [
+            __DIR__ . '/src/SDK/Metrics/Stream/SynchronousMetricStream.php'
         ],
         FlipTypeControlToUseExclusiveTypeRector::class,
         \Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class,

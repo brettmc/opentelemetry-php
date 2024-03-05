@@ -13,11 +13,8 @@ use OpenTelemetry\Config\Configuration;
  */
 class PhpIniResolver implements ResolverInterface
 {
-    private PhpIniAccessor $accessor;
-
-    public function __construct(?PhpIniAccessor $accessor = null)
+    public function __construct(private readonly PhpIniAccessor $accessor = new PhpIniAccessor())
     {
-        $this->accessor = $accessor ?? new PhpIniAccessor();
     }
 
     public function retrieveValue(string $variableName): string|bool
