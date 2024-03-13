@@ -35,20 +35,12 @@ final class Context implements ContextInterface
         return new ContextKey($key);
     }
 
-    /**
-     * @param ContextStorageInterface&ExecutionContextAwareInterface $storage
-     * @todo update type-hint (php >= 8.1)
-     */
-    public static function setStorage(ContextStorageInterface $storage): void
+    public static function setStorage(ContextStorageInterface&ExecutionContextAwareInterface $storage): void
     {
         self::$storage = $storage;
     }
 
-    /**
-     * @return ContextStorageInterface&ExecutionContextAwareInterface
-     * @todo update return type-hint (php >= 8.1)
-     */
-    public static function storage(): ContextStorageInterface
+    public static function storage(): ContextStorageInterface&ExecutionContextAwareInterface
     {
         /** @psalm-suppress RedundantPropertyInitializationCheck */
         return self::$storage ??= new ContextStorage();
