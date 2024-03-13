@@ -14,8 +14,7 @@ use function spl_object_id;
  */
 final class Context implements ContextInterface
 {
-    /** @var ContextStorageInterface&ExecutionContextAwareInterface */
-    private static ContextStorageInterface $storage;
+    private static ContextStorageInterface&ExecutionContextAwareInterface $storage;
 
     // Optimization for spans to avoid copying the context array.
     private static ContextKeyInterface $spanContextKey;
