@@ -6,10 +6,20 @@ namespace OpenTelemetry\API\Trace;
 
 use OpenTelemetry\Context\Context;
 use OpenTelemetry\Context\ContextInterface;
-use OpenTelemetry\Context\ContextKeys;
+use OpenTelemetry\Context\ContextKeyInterface;
 
 class LocalRootSpan
 {
+    /**
+     * @internal
+     */
+    public static function key(): ContextKeyInterface
+    {
+        static $key;
+
+        return $key ??= Context::createKey(self::class);
+    }
+
     public static function current(): SpanInterface
     {
         return self::fromContext(Context::getCurrent());
@@ -17,12 +27,12 @@ class LocalRootSpan
 
     public static function fromContext(ContextInterface $context): SpanInterface
     {
-        return $context->get(ContextKeys::localRootSpan()) ?? Span::getInvalid();
+        return $context->get(self::key()) ?? Span::getInvalid();
     }
 
     public static function store(ContextInterface $context, SpanInterface $span): ContextInterface
     {
-        return $context->with(ContextKeys::localRootSpan(), $span);
+        return $context->with(self::key(), $span);
     }
 
     /**
