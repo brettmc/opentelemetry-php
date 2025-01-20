@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OpenTelemetry\Config\SDK\Configuration;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 /**
  * A component provider is responsible for interpreting configuration and returning an
@@ -14,7 +15,6 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
  */
 interface ComponentProvider
 {
-
     /**
      * @param array $properties properties provided for this component provider
      * @param Context $context context that should be used to resolve component plugins
@@ -29,12 +29,12 @@ interface ComponentProvider
      * Returns an array node describing the properties of this component provider.
      *
      * @param ComponentProviderRegistry $registry registry containing all available component providers
+     * @param NodeBuilder $builder node builder used to create configuration nodes
      * @return ArrayNodeDefinition array node describing the properties
      *
      * @see ComponentProviderRegistry::component()
      * @see ComponentProviderRegistry::componentList()
-     * @see ComponentProviderRegistry::componentArrayList()
      * @see ComponentProviderRegistry::componentNames()
      */
-    public function getConfig(ComponentProviderRegistry $registry): ArrayNodeDefinition;
+    public function getConfig(ComponentProviderRegistry $registry, NodeBuilder $builder): ArrayNodeDefinition;
 }

@@ -13,13 +13,13 @@ use OpenTelemetry\SDK\Trace\SpanExporterInterface;
 use OpenTelemetry\SDK\Trace\SpanProcessor\BatchSpanProcessor;
 use OpenTelemetry\SDK\Trace\SpanProcessorInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 /**
  * @implements ComponentProvider<SpanProcessorInterface>
  */
 final class SpanProcessorBatch implements ComponentProvider
 {
-
     /**
      * @param array{
      *     schedule_delay: int<0, max>,
@@ -42,9 +42,9 @@ final class SpanProcessorBatch implements ComponentProvider
         );
     }
 
-    public function getConfig(ComponentProviderRegistry $registry): ArrayNodeDefinition
+    public function getConfig(ComponentProviderRegistry $registry, NodeBuilder $builder): ArrayNodeDefinition
     {
-        $node = new ArrayNodeDefinition('batch');
+        $node = $builder->arrayNode('batch');
         $node
             ->children()
                 ->integerNode('schedule_delay')->min(0)->defaultValue(5000)->end()

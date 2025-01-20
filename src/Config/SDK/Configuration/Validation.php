@@ -22,7 +22,6 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
  */
 final class Validation
 {
-
     public static function ensureString(): Closure
     {
         return static function (mixed $value): ?string {
@@ -31,6 +30,24 @@ final class Validation
             }
             if (!is_string($value)) {
                 throw new InvalidArgumentException('must be of type string');
+            }
+
+            return $value;
+        };
+    }
+
+    /**
+     * @psalm-suppress InvalidReturnType,InvalidReturnStatement
+     */
+    public static function ensureNumber(): Closure
+    {
+
+        return static function (mixed $value): null|int|float {
+            if ($value === null) {
+                return null;
+            }
+            if (!is_numeric($value)) {
+                throw new InvalidArgumentException('must be of type numeric');
             }
 
             return $value;

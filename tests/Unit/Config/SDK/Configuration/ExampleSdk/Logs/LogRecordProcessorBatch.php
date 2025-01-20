@@ -12,10 +12,10 @@ use OpenTelemetry\Config\SDK\Configuration\ComponentProvider;
 use OpenTelemetry\Config\SDK\Configuration\ComponentProviderRegistry;
 use OpenTelemetry\Config\SDK\Configuration\Context;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 final class LogRecordProcessorBatch implements ComponentProvider
 {
-
     /**
      * @param array{
      *     schedule_delay: int<0, max>,
@@ -30,9 +30,9 @@ final class LogRecordProcessorBatch implements ComponentProvider
         throw new BadMethodCallException('not implemented');
     }
 
-    public function getConfig(ComponentProviderRegistry $registry): ArrayNodeDefinition
+    public function getConfig(ComponentProviderRegistry $registry, NodeBuilder $builder): ArrayNodeDefinition
     {
-        $node = new ArrayNodeDefinition('batch');
+        $node = $builder->arrayNode('batch');
         $node
             ->children()
                 ->integerNode('schedule_delay')->min(0)->defaultValue(5000)->end()

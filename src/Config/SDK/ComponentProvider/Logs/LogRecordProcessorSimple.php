@@ -12,13 +12,13 @@ use OpenTelemetry\SDK\Logs\LogRecordExporterInterface;
 use OpenTelemetry\SDK\Logs\LogRecordProcessorInterface;
 use OpenTelemetry\SDK\Logs\Processor\SimpleLogRecordProcessor;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 /**
  * @implements ComponentProvider<LogRecordProcessorInterface>
  */
 final class LogRecordProcessorSimple implements ComponentProvider
 {
-
     /**
      * @param array{
      *     exporter: ComponentPlugin<LogRecordExporterInterface>,
@@ -31,9 +31,9 @@ final class LogRecordProcessorSimple implements ComponentProvider
         );
     }
 
-    public function getConfig(ComponentProviderRegistry $registry): ArrayNodeDefinition
+    public function getConfig(ComponentProviderRegistry $registry, NodeBuilder $builder): ArrayNodeDefinition
     {
-        $node = new ArrayNodeDefinition('simple');
+        $node = $builder->arrayNode('simple');
         $node
             ->children()
                 ->append($registry->component('exporter', LogRecordExporterInterface::class)->isRequired())

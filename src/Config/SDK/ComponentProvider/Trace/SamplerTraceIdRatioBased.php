@@ -10,13 +10,13 @@ use OpenTelemetry\Config\SDK\Configuration\Context;
 use OpenTelemetry\SDK\Trace\Sampler\TraceIdRatioBasedSampler;
 use OpenTelemetry\SDK\Trace\SamplerInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 /**
  * @implements ComponentProvider<SamplerInterface>
  */
 final class SamplerTraceIdRatioBased implements ComponentProvider
 {
-
     /**
      * @param array{
      *     ratio: float,
@@ -29,9 +29,9 @@ final class SamplerTraceIdRatioBased implements ComponentProvider
         );
     }
 
-    public function getConfig(ComponentProviderRegistry $registry): ArrayNodeDefinition
+    public function getConfig(ComponentProviderRegistry $registry, NodeBuilder $builder): ArrayNodeDefinition
     {
-        $node = new ArrayNodeDefinition('trace_id_ratio_based');
+        $node = $builder->arrayNode('trace_id_ratio_based');
         $node
             ->children()
                 ->floatNode('ratio')->min(0)->max(1)->isRequired()->end()

@@ -11,13 +11,13 @@ use OpenTelemetry\Config\SDK\Configuration\Context;
 use OpenTelemetry\Context\Propagation\MultiTextMapPropagator;
 use OpenTelemetry\Context\Propagation\TextMapPropagatorInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 /**
  * @implements ComponentProvider<TextMapPropagatorInterface>
  */
 final class TextMapPropagatorComposite implements ComponentProvider
 {
-
     /**
      * @param list<ComponentPlugin<TextMapPropagatorInterface>> $properties
      */
@@ -31,7 +31,7 @@ final class TextMapPropagatorComposite implements ComponentProvider
         return new MultiTextMapPropagator($propagators);
     }
 
-    public function getConfig(ComponentProviderRegistry $registry): ArrayNodeDefinition
+    public function getConfig(ComponentProviderRegistry $registry, NodeBuilder $builder): ArrayNodeDefinition
     {
         return $registry->componentNames('composite', TextMapPropagatorInterface::class);
     }
