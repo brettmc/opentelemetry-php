@@ -247,14 +247,12 @@ final class OpenTelemetrySdk implements ComponentProvider
             instrumentationScopeFactory: new InstrumentationScopeFactory(Attributes::factory()),
             resource: $resource,
         );
-        $eventLoggerProvider = new EventLoggerProvider($loggerProvider);
 
         // </editor-fold>
 
         $sdkBuilder->setTracerProvider($tracerProvider);
         $sdkBuilder->setMeterProvider($meterProvider);
         $sdkBuilder->setLoggerProvider($loggerProvider);
-        $sdkBuilder->setEventLoggerProvider($eventLoggerProvider);
 
         return $sdkBuilder;
     }
