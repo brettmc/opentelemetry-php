@@ -51,64 +51,64 @@ deptrac:
                   value: proto/otel/.*
       -   name: GoogleProtobuf
           collectors:
-              -   type: className
-                  regex: ^Google\\Protobuf\\*
+              -   type: classLike
+                  value: ^Google\\Protobuf\\*
       -   name: Grpc
           collectors:
-              - type: className
-                regex: ^Grpc\\*
+              - type: classLike
+                value: ^Grpc\\*
       -   name: PsrLog
           collectors:
-              - type: className
-                regex: ^Psr\\Log\\*
+              - type: classLike
+                value: ^Psr\\Log\\*
       -   name: PsrHttp
           collectors:
-              - type: className
-                regex: ^Psr\\Http\\*
+              - type: classLike
+                value: ^Psr\\Http\\*
       -   name: HttpPlug
           collectors:
-              - type: className
-                regex: ^Http\\*
+              - type: classLike
+                value: ^Http\\*
       -   name: Prometheus
           collectors:
-              - type: className
-                regex: ^Prometheus\\*
+              - type: classLike
+                value: ^Prometheus\\*
       -   name: FFI
           collectors:
-              - type: className
-                regex: ^FFI\\*
+              - type: classLike
+                value: ^FFI\\*
       -   name: Composer
           collectors:
-              - type: className
-                regex: ^Composer\\*
+              - type: classLike
+                value: ^Composer\\*
       -   name: HttpClients
           collectors:
-              - type: className
+              - type: classLike
                 value: ^Symfony\\Component\\HttpClient\\*
-              - type: className
+              - type: classLike
                 value: ^GuzzleHttp\\*
-              - type: className
+              - type: classLike
                 value: ^Buzz\\*
       -   name: SPI
           collectors:
-              - type: className
+              - type: classLike
                 value: ^Nevay\\SPI\\*
       -   name: SymfonyConfig
           collectors:
-              - type: className
+              - type: classLike
                 value: ^Symfony\\Component\\Config\\*
-              - type: className
+              - type: classLike
                 value: ^Symfony\\Component\\Yaml\\*
-              - type: className
+              - type: classLike
                 value: ^Symfony\\Component\\VarExporter\\*
       -   name: RamseyUuid
           collectors:
-              - type: className
-                regex: ^Ramsey\\Uuid\\*
+              - type: classLike
+                value: ^Ramsey\\Uuid\\*
       -   name: NyholmPsr7Server
           collectors:
-              - type: className
-                regex: ^Nyholm\\Psr7Server\\*
+              - type: classLike
+                value: ^Nyholm\\Psr7Server\\*
 
     ruleset:
       Context:
@@ -128,11 +128,13 @@ deptrac:
           - Context
           - PsrLog
           - SPI
+          - SymfonyConfig
       SDK:
           - +API
           - ConfigSDK
           - SemConv
           - PsrHttp
+          - PsrLog
           - HttpPlug
           - Composer
           - HttpClients
