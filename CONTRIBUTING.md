@@ -41,6 +41,11 @@ To propose changes to the codebase, you need
 to [open a pull request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
 to the opentelemetry-php project.
 
+**Open your pull request against `main`.** All new work goes to `main`, including breaking changes. The only exception is
+a bug fix for an older, still-supported major version, which goes to `main` first and is then backported — see
+[where to open a pull request](./docs/versioning.md#where-to-open-a-pull-request) for the details and
+[maintenance branches](./docs/versioning.md#maintenance-branches) for how backporting works.
+
 After you open the pull request, the CI will run all the
 associated [github actions](https://github.com/open-telemetry/opentelemetry-php/actions/workflows/php.yml).
 
